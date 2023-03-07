@@ -293,13 +293,6 @@ public interface ILangVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitDeclararBoolean([NotNull] LangParser.DeclararBooleanContext context);
 	/// <summary>
-	/// Visit a parse tree produced by the <c>chamarVariavel</c>
-	/// labeled alternative in <see cref="LangParser.declare"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitChamarVariavel([NotNull] LangParser.ChamarVariavelContext context);
-	/// <summary>
 	/// Visit a parse tree produced by the <c>declararVar</c>
 	/// labeled alternative in <see cref="LangParser.declare"/>.
 	/// </summary>

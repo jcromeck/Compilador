@@ -476,18 +476,6 @@ public interface ILangListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitDeclararBoolean([NotNull] LangParser.DeclararBooleanContext context);
 	/// <summary>
-	/// Enter a parse tree produced by the <c>chamarVariavel</c>
-	/// labeled alternative in <see cref="LangParser.declare"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterChamarVariavel([NotNull] LangParser.ChamarVariavelContext context);
-	/// <summary>
-	/// Exit a parse tree produced by the <c>chamarVariavel</c>
-	/// labeled alternative in <see cref="LangParser.declare"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitChamarVariavel([NotNull] LangParser.ChamarVariavelContext context);
-	/// <summary>
 	/// Enter a parse tree produced by the <c>declararVar</c>
 	/// labeled alternative in <see cref="LangParser.declare"/>.
 	/// </summary>

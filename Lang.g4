@@ -49,7 +49,7 @@ input:
   ;
  
 output: 
-    WRITE VAR? expr?  #outputWrite     
+    WRITE expr?  #outputWrite     
   ;
 
 ifst:
@@ -79,22 +79,21 @@ cond:
   ;
 
 atrib:
-    declare VAR '=' expr        # declaracao
+    declare? VAR '=' expr    # declaracao
   | declare VAR              # declaracaoVazia
   | array_declaracao         # declaracaoArray
   ;
 declare:
     STRING            # declararString
-  | INT               # declararInt
+  | INTEGER           # declararInt
   | FLOAT             # declararFloat
   | BOOLEAN           # declararBoolean
-  |                   # chamarVariavel
   | 'var'             # declararVar
   ;
-array_declaracao: type '[' NUM ']' VAR '=' '{' array_elements '}' ;
+array_declaracao: type '[' NUM ']' VAR (AT '{' array_elements '}')? ;
 type: 
     STRING 
-  | INT
+  | INTEGER
   | BOOLEAN
   | FLOAT
   ;
@@ -152,7 +151,7 @@ ELSE: [eE][lL][sS][eE];
 WRITE: [wW][rR][iI][tT][eE];
 READ: [rR][eE][aA][dD];
 STR: '"' ~["]* '"';
-INT: [iI][nN][tT];
+INTEGER: [iI][nN][tT][eE][gG][eE][rR];
 FLOAT: [fF][lL][oO][aA][tT];
 STRING: [sS][tT][rR][iI][nN][gG];
 BOOLEAN: [bB][oO][oO][lL][eE][aA][nN];

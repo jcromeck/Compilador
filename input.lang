@@ -1,34 +1,5 @@
+integer a;
+float b = 2.0;
+boolean certo = true;
 string palavra;
-write "Hello World";
-read palavra;
-int numero=2;
-int soma;
-float numeroQuebrado = 1.6;
-boolean verdadefalso = True;
-string frase = "Meu Deus mano";
-int[10] array = {1,4,621, 2};
-var variavel = "10";
-soma = array[2] + numero;
-int subtracao = soma - numero;
-float multiplicacao = subtracao*soma;
-float divisao = soma/2;
-float resto = soma%2;
-if(resto > divisao){
-    write resto;
-}else{
-    write divisao;
-}
-for(numero < 5; numero++){
-    write numero;
-}
-while(verdadefalso == True){
-    write verdadefalso;
-    verdadefalso = false;
-}
-repeat{
-    write "Entrou no repeat";
-    numero = numero+1;
-}until numero<(numero+numero)
-function hello2(){
-    return "Com retorno tambem";
-}
+int[1] array;

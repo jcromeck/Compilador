@@ -66,9 +66,8 @@ namespace Interpreter.Lang
 
         public override object? VisitOutputWrite([NotNull] LangParser.OutputWriteContext context)
         {
-            string texto = context.VAR().GetText().Trim('"');
-            string texto2 = context.@expr().GetText().Trim('"');
-            Console.WriteLine(texto+texto2);
+            string texto = context.@expr().GetText().Trim('"');
+            Console.WriteLine(texto);
             return null;
         }
         #endregion

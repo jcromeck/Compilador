@@ -557,20 +557,6 @@ public partial class LangBaseListener : ILangListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitDeclararBoolean([NotNull] LangParser.DeclararBooleanContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by the <c>chamarVariavel</c>
-	/// labeled alternative in <see cref="LangParser.declare"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterChamarVariavel([NotNull] LangParser.ChamarVariavelContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>chamarVariavel</c>
-	/// labeled alternative in <see cref="LangParser.declare"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitChamarVariavel([NotNull] LangParser.ChamarVariavelContext context) { }
-	/// <summary>
 	/// Enter a parse tree produced by the <c>declararVar</c>
 	/// labeled alternative in <see cref="LangParser.declare"/>.
 	/// <para>The default implementation does nothing.</para>
