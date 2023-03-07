@@ -7,19 +7,10 @@ Projeto feito em C# com ANTLR4
 
 ´git clone https://github.com/jcromeck/Compilador.git´
 ´dotnet restore´
-## Falta arrumar
-Write Variavel;
+## Funcionalidades
 
-## Verificado
-Read variavel;
+Comandos de entrada e saída
 
-Lang.g4 Completo
-LangInterpreter com funcionalidades de:
-       Write
-       Read
-       If Else
-       Operações matematicas  
-       
 
        
 

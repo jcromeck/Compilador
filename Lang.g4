@@ -28,8 +28,7 @@ params:
 line:
 	  stmt EOL          # lineStmt
 	| ifst              # lineIf
-	| whilest           # lineWhile
-  | forst             # lineFor
+	| stat              # lineStat
   | function          # lineFunction
 	| EOL               # lineEOL
   ;
@@ -49,7 +48,7 @@ input:
   ;
  
 output: 
-    WRITE expr?  #outputWrite     
+    WRITE expr  #outputWrite     
   ;
 
 ifst:
@@ -57,15 +56,14 @@ ifst:
 	| IF '(' cond ')' b1=block ELSE b2=block # ifstIfElse
   | IF '(' cond ')' b1=block ELSE ifst     # ifstIfElseIF
   ;
-forst:
-    'for''('cond')'block
-  | 'for''('cond';'VAR '=' expr')'block
-  | 'for''('cond';'VAR '++'')'block
-  ;
-whilest:
-    WHILE'('cond')'block
-  | REPEAT block UNTIL cond
-  ;
+stat : forLoop | whileLoop | repeatUntilLoop ;
+
+forLoop : 'for' '('VAR '=' expr';' cond atrib')' block;
+
+whileLoop : 'while' cond 'do' block;
+
+repeatUntilLoop : 'repeat' stat 'until' expr;
+
 block:
     '{' line+ '}'                # blockLine
   ;
@@ -79,25 +77,15 @@ cond:
   ;
 
 atrib:
-    declare? VAR '=' expr    # declaracao
-  | declare VAR              # declaracaoVazia
-  | array_declaracao         # declaracaoArray
+    type VAR '=' expr   # declaracao
+  | type VAR            # declaracaoVazia
   ;
-declare:
-    STRING            # declararString
-  | INTEGER           # declararInt
-  | FLOAT             # declararFloat
-  | BOOLEAN           # declararBoolean
-  | 'var'             # declararVar
+type:
+    STRING            # stringExpr
+  | INTEGER           # integerExpr
+  | FLOAT             # floatExpr
+  | BOOLEAN           # booleanExpr
   ;
-array_declaracao: type '[' NUM ']' VAR (AT '{' array_elements '}')? ;
-type: 
-    STRING 
-  | INTEGER
-  | BOOLEAN
-  | FLOAT
-  ;
-array_elements: expr (',' expr)* ;
 expr: 
     term '+' expr         # exprPlus
   | term '-' expr         # exprMinus
@@ -105,6 +93,7 @@ expr:
   | BOOL_TRUE             # exprTrue
   | BOOL_FALSE            # exprFalse
   | STR                   # exprString
+  | VAR                   # factorVar
   ;
 
 term: 
@@ -116,9 +105,7 @@ term:
 
 factor: 
     '(' expr ')'             # factorExpr
-  | VAR                      # factorVar
   | NUM                      # factorNum
-  | VAR '['array_elements']' # exprArray
   ;
 
 // Lexical rules

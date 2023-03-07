@@ -12,6 +12,11 @@ namespace Interpreter.Lang
 {
     public class LangInterpreter : LangBaseVisitor<object?>
     {
+        private Dictionary<string, int> intVars = new Dictionary<string, int>();
+        private Dictionary<string, float> floatVars = new Dictionary<string, float>();
+        private Dictionary<string, bool> boolVars = new Dictionary<string, bool>();
+        private Dictionary<string, string> stringVars = new Dictionary<string, string>();
+        private Dictionary<string, List<object>> arrayVars = new Dictionary<string, List<object>>();
         private Dictionary<string, IParseTree> _functions;
 
         public LangInterpreter(Dictionary<string, IParseTree> functions)
@@ -64,11 +69,33 @@ namespace Interpreter.Lang
             return null;
         }*/
 
+        public override object? VisitFactorVar([NotNull] LangParser.FactorVarContext context)
+        {
+            if (context.VAR() != null)
+            {
+                var variableName = context.VAR().GetText();
+                if (Variables.ContainsKey(variableName))
+                {
+                    return Variables[variableName];
+                }
+                else
+                {
+                    throw new Exception($"Variável '{variableName}' não foi definida.");
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+        
         public override object? VisitOutputWrite([NotNull] LangParser.OutputWriteContext context)
         {
-            string texto = context.@expr().GetText().Trim('"');
-            Console.WriteLine(texto);
-            return null;
+            var exprResult = context.expr()?.Accept(this);
+            var message = exprResult != null ? exprResult.ToString() : "";
+                Console.WriteLine(message);
+                return null;
         }
         #endregion
 
@@ -87,11 +114,166 @@ namespace Interpreter.Lang
             var d = GetDoubles(context.term(), context.expr());
             return d.Item1 + d.Item2;
         }
+        public override object VisitDeclaracaoVazia([NotNull] LangParser.DeclaracaoVaziaContext context)
+        {
+            var varName = context.VAR().GetText();
+            var variableType = context.type().GetText();
+
+            if (intVars.ContainsKey(varName) || floatVars.ContainsKey(varName) || boolVars.ContainsKey(varName) || stringVars.ContainsKey(varName) || arrayVars.ContainsKey(varName))
+        {
+            throw new Exception("Variável " + varName + " já foi declarada.");
+        }
+
+            switch (variableType)
+        {
+            case "int":
+                intVars.Add(varName, 0);
+                break;
+            case "float":
+                floatVars.Add(varName, 0.0f);
+                break;
+            case "bool":
+                boolVars.Add(varName, false);
+                break;
+            case "string":
+                stringVars.Add(varName, "");
+                break;
+            case "array":
+                arrayVars.Add(varName, new List<object>());
+                break;
+            default:
+                throw new Exception("Tipo " + variableType + " inválido.");
+            }
+            return base.VisitDeclaracaoVazia(context);
+        }
+        public override object VisitDeclaracao(LangParser.DeclaracaoContext context)
+        {
+            
+        string id = context.VAR().GetText();
+        if (!Variables.ContainsKey(id))
+        {
+            Console.WriteLine($"Erro: Variável {id} não declarada.");
+            return null;
+        }
+
+        object value = Visit(context.expr());
+        Variables[id] = value;
+
+        return base.VisitDeclaracao(context);
+        }
+        public override object VisitIntegerExpr([NotNull] LangParser.IntegerExprContext context)
+        {
+            int value = int.Parse(context.INTEGER().GetText());
+            object valueReturn = value;
+            return valueReturn;
+        }
+        public override object VisitForLoop(LangParser.ForLoopContext context)
+        {
+            string id = context.VAR().GetText();
+            int start = (int)Visit(context.expr());
+            int end = (int)Visit(context.expr());
+            for (int i = start; i <= end; i++)
+            {
+                Variables[id] = i;
+                Visit(context.stat());
+            }
+
+            return base.VisitForLoop(context);
+        }
+
+        public override object VisitWhileLoop(LangParser.WhileLoopContext context)
+        {
+            while ((bool)Visit(context.expr()))
+            {
+                Visit(context.stat());
+            }
+
+            return base.VisitWhileLoop(context);
+        }
+
+        public override object VisitRepeatUntilLoop(LangParser.RepeatUntilLoopContext context)
+        {
+            do
+            {
+                Visit(context.stat());
+            } while (!(bool)Visit(context.expr()));
+
+            return base.VisitRepeatUntilLoop(context);
+        }
+
+        public override object VisitFloatExpr([NotNull] LangParser.FloatExprContext context)
+        {
+            float value = float.Parse(context.FLOAT().GetText());
+            object valueReturn = value;
+            return valueReturn;
+        }
+
+        public override object VisitBooleanExpr([NotNull] LangParser.BooleanExprContext context)
+        {
+            bool value = bool.Parse(context.BOOLEAN().GetText());
+            object valueReturn = value;
+            return valueReturn;
+        }
+        private object GetValue(string text)
+        {
+            if (text == "true")
+            {
+                return true;
+            }
+
+            if (text == "false")
+            {
+                return false;
+            }
+
+            float floatValue;
+            if (float.TryParse(text, out floatValue))
+            {
+                return floatValue;
+            }
+
+            int intValue;
+            if (int.TryParse(text, out intValue))
+            {
+                return intValue;
+            }
+
+            return text.Trim('"');
+        }
+
+        private object GetDefaultValue(string typeName)
+        {
+            switch (typeName)
+            {
+                case "int":
+                    return 0;
+                case "float":
+                    return 0.0f;
+                case "string":
+                    return "";
+                case "bool":
+                    return false;
+                default:
+                    return null;
+            }
+        }
+
+        public override string VisitStringExpr([NotNull] LangParser.StringExprContext context)
+        {
+            string value = context.STRING().GetText();
+            return value.Substring(1, value.Length - 2); // Remove aspas duplas do início e fim da string
+        }
+
 
         public override object VisitExprMinus([NotNull] LangParser.ExprMinusContext context)
         {
             var d = GetDoubles(context.term(), context.expr());
             return d.Item1 - d.Item2;
+        }
+        public override object VisitTermResto([NotNull] LangParser.TermRestoContext context)
+        {
+            var d = GetDoubles(context.factor(), context.term());
+            return d.Item1 % d.Item2;
         }
 
         public override object? VisitExprTerm([NotNull] LangParser.ExprTermContext context)
@@ -114,16 +296,6 @@ namespace Interpreter.Lang
         public override object? VisitTermFactor([NotNull] LangParser.TermFactorContext context)
         {
             return Visit(context.factor());
-        }
-
-        public override object? VisitFactorVar([NotNull] LangParser.FactorVarContext context)
-        {
-            var varName = context.VAR().GetText();
-            if (Variables.ContainsKey(varName))
-                return Variables[varName];
-
-            Console.WriteLine("Variable " + varName + " is not defined");
-            return null;
         }
 
         public override object? VisitFactorNum([NotNull] LangParser.FactorNumContext context)

@@ -1,5 +1,4 @@
-integer a;
-float b = 2.0;
-boolean certo = true;
-string palavra;
-int[1] array;
+for(x=10;x<15;x = x+1){
+    read oi;
+    write oi;
+}
