@@ -5,8 +5,8 @@ Projeto feito em C# com ANTLR4
 
 ## Criando e Restaurando repositório
 
-´git clone https://github.com/jcromeck/Compilador.git´
-dotnet restore´
+Para clonar o repositório: git clone https://github.com/jcromeck/Compilador.git
+Para inserir as dependencias: dotnet restore
 ## Funcionalidades
 
 Comandos de entrada e saída
